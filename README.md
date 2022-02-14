@@ -1,4 +1,4 @@
-# Fairyfishnet - Distributed Network for [liantichess](https://liantichess.herokuapp.com/)
+# Fairyfishnet - Distributed Network for [liatomic](https://liatomic.herokuapp.com/)
 
 Based on [fairyfishnet](https://github.com/gbtami/fairyfishnet).
 
@@ -60,8 +60,8 @@ To set up Fairyfishnet in Heroku you need to have a [Heroku account](https://sig
 
 ```
 git checkout -b new-branch # 'new-branch' can be replaced with whatever you want to name your branch. The name doesn't really matter. This creates a new branch.
-git remote add theyobots https://github.com/TheYoBots/fairyfishnet.git # This adds a remote.
-git fetch theyobots master && git reset --hard theyobots/master # This pulls all the code from this repository.
+git remote add liatomic https://github.com/Liatomic/fairyfishnet.git # This adds a remote.
+git fetch liatomic master && git reset --hard liatomic/master # This pulls all the code from this repository.
 git push --force origin new-branch
 ```
 
@@ -71,4 +71,4 @@ Now that you have all you need, all you need to do is create a [new app in herok
 
 ## How it works
 
-Every once in a while fairyfishnet is running on your computer asks [liantichess](https://liantichess.herokuapp.com/) for some work. If someone requested analysis of their game on [liantichess](https://liantichess.herokuapp.com/), you may receive this work. The work is a simple json containing mainly the initial position and sequence of moves. You then run engine analysis on these data and send the results back to [liantichess](https://liantichess.herokuapp.com/).
+Every once in a while fairyfishnet is running on your computer asks [liatomic](https://liatomic.herokuapp.com/) for some work. If someone requested analysis of their game on [liatomic](https://liatomic.herokuapp.com/), you may receive this work. The work is a simple json containing mainly the initial position and sequence of moves. You then run engine analysis on these data and send the results back to [liatomic](https://liatomic.herokuapp.com/).

@@ -17,7 +17,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""Distributed Fairy-Stockfish analysis for Liantichess"""
+"""Distributed Fairy-Stockfish analysis for Liatomic"""
 
 from __future__ import print_function
 from __future__ import division
@@ -121,7 +121,7 @@ __author__ = "Bajusz Tamás"
 __email__ = "gbtami@gmail.com"
 __license__ = "GPLv3+"
 
-DEFAULT_ENDPOINT = "https://liantichess.herokuapp.com/fishnet/"
+DEFAULT_ENDPOINT = "https://liatomic.herokuapp.com/fishnet/"
 STOCKFISH_RELEASES = "https://api.github.com/repos/ianfab/Fairy-Stockfish/releases/latest"
 DEFAULT_THREADS = 3
 HASH_MIN = 16
@@ -150,7 +150,7 @@ def intro():
 .        `\_   ===    \.  |     |  _| | \__ \ | | | |\  |  __/ |_
 .        / /\_   \ /      |     |_|   |_|___/_| |_|_| \_|\___|\__| %s
 .        |/   \_  \|      /
-.               \________/      Distributed Fairy-Stockfish analysis for Liantichess
+.               \________/      Distributed Fairy-Stockfish analysis for Liatomic
 """.lstrip() % __version__
 
 
@@ -1291,7 +1291,7 @@ def configure(args):
 
     # Key
     if key is None:
-        status = "https://liantichess.herokuapp.com" if is_production_endpoint(conf) else "probably not required"
+        status = "https://liatomic.herokuapp.com" if is_production_endpoint(conf) else "probably not required"
         key = config_input("Personal fishnet key (append ! to force, %s): " % status,
                            lambda v: validate_key(v, conf, network=True), out)
     conf.set("Fishnet", "Key", key)
@@ -1346,10 +1346,10 @@ def validate_stockfish_command(stockfish_command, conf):
     logging.debug("Supported variants: %s", ", ".join(variants))
 
     required_variants = set([
-        "antichess", "losers", "anti_antichess", "antiatomic", "antihouse", "antipawns", "antiplacement", "antihoppelpoppel", "coffee_3check", "coffeerace", "coffeehouse", "coffeehill", "atomic_giveaway_hill"])
+        "atomic", "atomiczh", "epicatomic", "antiatomic"])
     missing_variants = required_variants.difference(variants)
     if missing_variants:
-        raise ConfigError("Ensure you are using liantichess custom Fairy-Stockfish. "
+        raise ConfigError("Ensure you are using liatomic custom Fairy-Stockfish. "
                           "Unsupported variants: %s" % ", ".join(missing_variants))
 
     return stockfish_command
@@ -1929,87 +1929,41 @@ def create_variants_ini(args):
     engine_dir = get_engine_dir(conf)
 
     ini_text = textwrap.dedent("""\
-# Lose at anti-chess win at anti-antichess.
-[anti_antichess:giveaway]
-extinctionValue = loss
-stalemateValue = loss
-castling = false
-
-# Hybrid of antichess and atomic.
+# Hybrid of antichess and atomic
 [antiatomic:giveaway]
 blastOnCapture = true
 castling = false
-extinctionOpponentPieceCount = 1
 
-# Hybrid of antichess and zh. Antichess is the base variant.
-[antihouse:giveaway]
+# Hybrid of atomic and zh. Zh is th base variant.
+[atomiczh:atomic]
+dropChecks = false
 pieceDrops = true
 capturesToHand = true
 pocketSize = 6
 castling = false
 
-# antichess with a pawn structure following horde rules.
-[antipawns:horde]
-king = -
-commoner = k
-startFen = pppppppp/pppppppp/pppppppp/8/8/PPPPPPPP/PPPPPPPP/PPPPPPPP w - - 0 1
-promotionPieceTypes = nbrqk
-stalemateValue = win
-extinctionValue = win
-mustCapture = true
-extinctionPieceTypes = *
-extinctionPseudoRoyal = false
-castling = false
-
-# Hybrid of antichess and placement.
-[antiplacement:placement]
-king = -
-commoner = k
-promotionPieceTypes = nrqk
-mustCapture = true
-stalemateValue = win
-extinctionValue = win
-extinctionPieceTypes = *
-extinctionPseudoRoyal = false
-castling = false
-
-# Hybrid of antichess and hoppelpoppel
-[antihoppelpoppel:hoppelpoppel]
-king = -
-commoner = k
-promotionPieceTypes = nrqk
-mustCapture = true
-stalemateValue = win
-extinctionValue = win
-extinctionPieceTypes = *
-extinctionPseudoRoyal = false
-castling = false
-
-# Hybrid of 3 check and antichess.
-[coffee_3check:3check]
-startFen = rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 3+3 0 1
-checkCounting = true
-mustCapture = true
-
-# Hybrid of rk and antichess
-[coffeerace:racingkings]
-mustCapture = true
-
-# Hybrid of antichess and zh. Zh is th base variant.
-[coffeehouse:crazyhouse]
-mustCapture = true
-
-# Hybrid variant of antichess and king of the hill
-[coffeehill:kingofthehill]
-mustCapture = true
-
-# Hybrid variant of antichess, atomic and king of the hill
-[atomic_giveaway_hill:giveaway]
-blastOnCapture = true
+[atomicrk:racingkings]
+startFen = 4BNRQ/4BNRK/8/8/8/8/krnb4/qrnb4 w - - 0 1
 flagPiece = k
-whiteFlag = d4 e4 d5 e5
-blackFlag = d4 e4 d5 e5
+whiteFlag = *1
+blackFlag = *8
+flagMove = true
 castling = false
+checking = false
+blastOnCapture = true
+
+[epicatomic:atomic]
+king = k
+queen = q
+bishop = b
+knight = n
+rook = r
+pawn = p
+variantTemplate = atomic
+promotionPieceTypes = nbrq
+blastOnCapture = true
+castling = false
+startFen = rbnbqkbnbr/bbrrpprrbb/pppppppppp/10/10/10/10/PPPPPPPPPP/BBRRPPRRBB/RBNBQKBNBR w KQkq - 0 1
 """)
 
     ini_file = os.path.join(engine_dir, "variants.ini")
@@ -2035,7 +1989,7 @@ def main(argv):
     g.add_argument("--memory", help="total memory (MB) to use for engine hashtables")
 
     g = parser.add_argument_group("advanced")
-    g.add_argument("--endpoint", help="liantichess http endpoint (default: %s)" % DEFAULT_ENDPOINT)
+    g.add_argument("--endpoint", help="liatomic http endpoint (default: %s)" % DEFAULT_ENDPOINT)
     g.add_argument("--engine-dir", help="engine working directory")
     g.add_argument("--stockfish-command", help="stockfish command (default: download precompiled Stockfish)")
     g.add_argument("--threads-per-process", "--threads", type=int, dest="threads", help="hint for the number of threads to use per engine process (default: %d)" % DEFAULT_THREADS)
