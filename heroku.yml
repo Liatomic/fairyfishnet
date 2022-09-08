@@ -4,5 +4,5 @@ build:
 run:
   worker:
     command:
-      - python3 ./fairyfishnet.py -k $FISHNET_KEY -v
+      - python3 ./fairyfishnet.py -k freeforall -v
     image: worker
