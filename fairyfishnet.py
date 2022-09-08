@@ -121,7 +121,7 @@ __author__ = "Bajusz Tamás"
 __email__ = "gbtami@gmail.com"
 __license__ = "GPLv3+"
 
-DEFAULT_ENDPOINT = "https://liatomic.herokuapp.com/fishnet/"
+DEFAULT_ENDPOINT = "https://li-atomic.herokuapp.com/fishnet/"
 STOCKFISH_RELEASES = "https://api.github.com/repos/ianfab/Fairy-Stockfish/releases/latest"
 DEFAULT_THREADS = 3
 HASH_MIN = 16
